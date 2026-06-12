@@ -1,4 +1,4 @@
-/**
+/*
  * A buffer that stores the last N audio frames as x,y,z points for the ribbon trail.
  */
 

@@ -46,9 +46,4 @@ export class Ribbon {
     this.posAttr.needsUpdate = true             // flag for re-upload
     this.geometry.setDrawRange(0, this.buffer.count)
   }
-
-  dispose() {
-    this.geometry.dispose()
-    this.line.material.dispose()
-  }
 }

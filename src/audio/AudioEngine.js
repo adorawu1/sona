@@ -9,7 +9,7 @@ export class AudioEngine {
     this.ctx           = null
     this.analyser      = null
     this.fftArray      = null  // Uint8Array(1024)
-    this.waveformArray = null  // Float32Array(2048)
+    this.waveformArray = null  // Uint8Array(2048)
     this.prevFFT       = null  // Uint8Array(1024) — last frame snapshot
     this.ready         = false
   }

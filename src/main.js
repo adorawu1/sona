@@ -18,12 +18,13 @@ const scene  = new SceneSetup(container)
 const ribbon = new Ribbon(scene.scene)
 
 // Mic button — AudioContext must start inside a user gesture
-document.getElementById('start-btn').addEventListener('click', async () => {
+const button = document.getElementById('start-btn')
+button.addEventListener('click', async () => {
   try {
     await audio.start()
-    document.getElementById('start-btn').style.display = 'none'
+    button.style.display = 'none'
   } catch (err) {
-    document.getElementById('start-btn').textContent = 'mic unavailable'
+    button.textContent = 'mic unavailable'
     console.error(err)
   }
 })
