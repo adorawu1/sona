@@ -7,9 +7,9 @@ import { normalize }   from './utils/normalize.js'
 // Normalization ranges — tune after first run
 // Ribbon clusters at center → lower the max
 // Ribbon clips at edge      → raise the max
-const CENTROID_MAX = 4000
-const RMS_MAX      = 0.8
-const FLUX_MAX     = 3000
+const CENTROID_MAX = 3000
+const RMS_MAX      = 0.15
+const FLUX_MAX     = 1000
 
 // Initialize all three systems independently
 const container = document.getElementById('app')
