@@ -3,7 +3,11 @@
  */
 
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { OrbitControls }    from 'three/examples/jsm/controls/OrbitControls.js'
+import { EffectComposer }   from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass }       from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { UnrealBloomPass }  from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
+import { OutputPass }       from 'three/examples/jsm/postprocessing/OutputPass.js'
 
 function makeAxis(from, to, color) {
   const geo = new THREE.BufferGeometry().setFromPoints([from, to])
@@ -77,11 +81,20 @@ export class SceneSetup {
     this.controls.minDistance  = 1
     this.controls.maxDistance  = 12
 
-    // Resize handler — keeps canvas and camera in sync with window size
+    // Post-processing — bloom makes the ribbon luminous
+    this.composer = new EffectComposer(this.renderer)
+    this.composer.addPass(new RenderPass(this.scene, this.camera))
+    this.composer.addPass(new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight), 0.2, 0.4, 0
+    ))
+    this.composer.addPass(new OutputPass())
+
+    // Resize handler — keeps canvas, camera, and composer in sync with window size
     this._onResize = () => {
       this.camera.aspect = window.innerWidth / window.innerHeight
       this.camera.updateProjectionMatrix()
       this.renderer.setSize(window.innerWidth, window.innerHeight)
+      this.composer.setSize(window.innerWidth, window.innerHeight)
     }
     window.addEventListener('resize', this._onResize)
   }

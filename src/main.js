@@ -7,9 +7,11 @@ import { normalize }   from './utils/normalize.js'
 // Normalization ranges — tune after first run
 // Ribbon clusters at center → lower the max
 // Ribbon clips at edge      → raise the max
-const CENTROID_MAX = 3000
-const RMS_MAX      = 0.15
-const FLUX_MAX     = 1000
+const CENTROID_MAX  = 3000
+const RMS_FLOOR     = 0.02   // sounds below this are treated as silence
+const RMS_MAX       = 0.3
+const FLUX_FLOOR    = 100    // spectral noise floor
+const FLUX_MAX      = 1800
 
 // Initialize all three systems independently
 const container = document.getElementById('app')
@@ -37,16 +39,16 @@ function loop() {
   const waveform = audio.getWaveform()
 
   if (fft && waveform) {
-    const x = normalize(features.centroid(fft),            0, CENTROID_MAX)
-    const y = normalize(features.rms(waveform),            0, RMS_MAX)
-    const z = normalize(features.flux(fft, audio.prevFFT), 0, FLUX_MAX)
+    const x = normalize(features.centroid(fft),            0,         CENTROID_MAX)
+    const y = normalize(features.rms(waveform),            RMS_FLOOR, RMS_MAX)
+    const z = normalize(features.flux(fft, audio.prevFFT), FLUX_FLOOR, FLUX_MAX)
 
     audio.storePrevFFT()  // after flux reads prevFFT, before next frame
     ribbon.update(x, y, z)
   }
 
   scene.controls.update()  // required every frame for damping
-  scene.renderer.render(scene.scene, scene.camera)
+  scene.composer.render()
 }
 
 loop()
